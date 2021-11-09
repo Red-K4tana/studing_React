@@ -1,10 +1,10 @@
 import React from "react";
 
-/*type TodolistPropsType = {
+type TodolistPropsType = {
     title: string
-}*/
+}
 
-export const Todolist = (props: string)=> {
+export const Todolist = (props: TodolistPropsType)=> {
     return (
         <div>
             <h3>{props.title}</h3>
