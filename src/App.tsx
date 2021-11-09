@@ -14,10 +14,10 @@ function App() {
                 <div>Yq</div>
             </div>
             <div className="App">
-                <Todolist title={'Хомяки'}/>
-                <Todolist title={'Крысы'}/>
-                <Todolist title={'Мыши'}/>
-                <Todolist title={'Ласки'}/>
+                <Todolist title={'Хомяки - ' + 5}/>
+                <Todolist title={'Крысы - ' + 2}/>
+                <Todolist title={'Мыши - ' + 32}/>
+                <Todolist title={'Ласки - ' + 11}/>
             </div>
         </div>
 
