@@ -1,41 +1,45 @@
 import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
+import {v1} from "uuid";
 
-export type filterType = 'All' | 'Active' | 'Completed'
+export type filterValuesType = 'All' | 'Active' | 'Completed' | 'X'
 
 function App() {
-    const [task, setTask] = useState([
-            {id: 1, title: "HTML", isDone: true},
-            {id: 2, title: "JS", isDone: true},
-            {id: 4, title: "React", isDone: false},
-            {id: 5, title: "View", isDone: false},
-            {id: 6, title: "Angular", isDone: true},
-            {id: 7, title: "CSS", isDone: true},
-            {id: 8, title: "C#", isDone: false},
-            {id: 9, title: "C++", isDone: false},
-            {id: 10, title: "PHP", isDone: true},
-            {id: 11, title: "Java", isDone: false},
-            {id: 12, title: "Kotlin", isDone: true}
+    const [tasks, setTasks] = useState([ //hooke для удаления
+            {id: v1(), title: "HTML", isDone: true},
+            {id: v1(), title: "JS", isDone: true},
+            {id: v1(), title: "React", isDone: false},
+            {id: v1(), title: "View", isDone: false},
+            {id: v1(), title: "Angular", isDone: true},
+            {id: v1(), title: "CSS", isDone: true},
+            {id: v1(), title: "C#", isDone: false},
         ]
     )
-    const removeTaskItem = (itemId: number) => {
-        setTask(task.filter(x => x.id !== itemId))
+    const removeTaskItem = (itemId: string) => {
+        setTasks(tasks.filter(x => x.id !== itemId))
+    }
+    const addTask = (title: string) => {
+        let newTask = [...tasks, {id: v1(), title: title, isDone: false}]
+        setTasks(newTask)
+        console.log(tasks)
     }
     //---------------------------------------------------------
-    const [filter, setMyFilter] = useState<filterType>('All')
+    const [filter, setMyFilter] = useState<filterValuesType>('All') //hooke для фильтра
 
-    let array = task
+    let array = tasks
 
-    const setFilter = (value: filterType) => {
+    const setFilter = (value: filterValuesType) => {
         setMyFilter(value)
     }
     if (filter === 'All') {
-        array = task
-    } else if (filter === 'Completed') {
-        array = task.filter(x => x.isDone)
-    } else if (filter === 'Active') {
-        array = task.filter(x => !x.isDone)
+        array = tasks
+    }
+    if (filter === 'Completed') {
+        array = tasks.filter(x => x.isDone)
+    }
+    if (filter === 'Active') {
+        array = tasks.filter(x => !x.isDone)
     }
     //---------------------------------------------------------
     return (
@@ -63,6 +67,7 @@ function App() {
                 tasks={array}
                 removeTaskItem={removeTaskItem}
                 setFilter={setFilter}
+                addTask={addTask}
             />
 
         </div>
