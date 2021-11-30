@@ -7,11 +7,11 @@ export type filterValuesType = 'All' | 'Active' | 'Completed' | 'X'
 
 function App() {
     const [tasks, setTasks] = useState([ //hooke для удаления
-            {id: v1(), title: "HTML", isDone: true},
-            {id: v1(), title: "JS", isDone: true},
+            {id: v1(), title: "HTML", isDone: false},
+            {id: v1(), title: "JS", isDone: false},
             {id: v1(), title: "React", isDone: false},
-            {id: v1(), title: "View", isDone: false},
-            {id: v1(), title: "Angular", isDone: true},
+            {id: v1(), title: "View", isDone: true},
+            {id: v1(), title: "Angular", isDone: false},
             {id: v1(), title: "CSS", isDone: true},
             {id: v1(), title: "C#", isDone: false},
         ]
@@ -24,6 +24,12 @@ function App() {
         setTasks(newTask)
         console.log(tasks)
     }
+    const changeStatus = (value: boolean, itemId: string)=> {
+        setTasks(tasks.map(m=> m.id === itemId ? {...m, isDone: value} : m))
+
+    }
+
+
     //---------------------------------------------------------
     const [filter, setMyFilter] = useState<filterValuesType>('All') //hooke для фильтра
 
@@ -44,30 +50,14 @@ function App() {
     //---------------------------------------------------------
     return (
         <div className="App">
-            <div>
-                <h3>What to learn Это Апп</h3>
-                <div>
-                    <input/>
-                    <button>+</button>
-                </div>
-                <ul>
-                    <li><input type="checkbox" checked={true}/> <span>HTML&CSS</span></li>
-                    <li><input type="checkbox" checked={true}/> <span>JS</span></li>
-                    <li><input type="checkbox" checked={false}/> <span>React</span></li>
-                </ul>
-
-                <div>
-                    <button>All</button>
-                    <button>Active</button>
-                    <button>Completed</button>
-                </div>
-            </div>
             <Todolist
                 title={'What to learn 11 этоToDoList'}
                 tasks={array}
                 removeTaskItem={removeTaskItem}
                 setFilter={setFilter}
                 addTask={addTask}
+                changeStatus={changeStatus}
+                filter={filter}
             />
 
         </div>
