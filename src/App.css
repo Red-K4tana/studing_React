@@ -1,8 +1,18 @@
-.App {
+.todoList {
   padding: 30px;
   display: flex;
+
 }
 
-.App > div {
+.todoList > div {
   margin-right: 50px;
+}
+.todoLists {
+  display: flex;
+  flex-wrap: wrap;
+}
+.button-add-tl {
+  width: auto;
+  height: auto;
+  margin: 150px 5px;
 }

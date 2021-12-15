@@ -3,7 +3,7 @@ import React from "react";
 type propsType = {
     name: string
     callback: ()=> void
-    color: string
+    color?: string
 }
 
 export const Button = (props: propsType) => {
