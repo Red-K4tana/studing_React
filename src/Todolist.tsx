@@ -1,28 +1,26 @@
-import React, {ChangeEvent,KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {FilterValuesType} from "./App";
 import {Button} from "./components/Button";
 import {Input} from "./components/Input";
 import s from "./components/Input.module.css";
-import tl from './TodoList.module.css';
-import {TasksType} from './App'
-
-
+import tl from './TodoList.module.css'
+import {TasksType} from "./App";
+import AddItemForm from "./components/AddItemForm";
 
 type TodolistPropsType = {
-    todoList_id: string
+    todoListID: string
     todoListTitle: string
     tasks: Array<TasksType>
-    removeTaskItem:(todoList_id: string, itemId: string)=>void
-    setFilter:(todoList_id: string, value: FilterValuesType)=>void
-    addTask: (todoList_id: string, title: string)=>void
-    changeStatus: (todoList_id: string, itemId: string, value: boolean)=> void
+    removeTaskItem: (todoListID: string, itemId: string) => void
+    changeFilter: (todoListID: string, value: FilterValuesType) => void
+    addTask: (todoListID: string, title: string) => void
+    changeTaskStatus: (todoListID: string, itemId: string, value: boolean) => void
     filter: string
-    removeTodoList: (todoList_id: string) => void
+    removeTodoList: (todoListID: string) => void
 }
-type error = boolean | null
 
-export const TodoList = (props: TodolistPropsType) => {
-    const [error, setError] = useState<error>(null)
+export const Todolist = (props: TodolistPropsType) => {
+    /*const [error, setError] = useState<error>(null)
     const [title, setTitle] = useState('')
 
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +30,7 @@ export const TodoList = (props: TodolistPropsType) => {
     }
     const addTaskHandler = () => { //кнопка Add
         if (title.trim()) { //не даст отправить пустую строку
-            props.addTask(props.todoList_id, title.trim()) //обрежет все пробелы по краям
+            props.addTask(props.todoListID, title.trim()) //обрежет все пробелы по краям
             setTitle('')
         } else {
             setError(true)
@@ -42,32 +40,41 @@ export const TodoList = (props: TodolistPropsType) => {
         if (event.key === 'Enter') {
             addTaskHandler()
         }
-    }
+    }*/
     const tsarChangeFilter = (event: FilterValuesType) => { //кнопки фильтра
-        props.setFilter(props.todoList_id, event)
+        props.changeFilter(props.todoListID, event)
     }
-    const onChangeStatusHandler = (event: ChangeEvent<HTMLInputElement>, itemId: string)=> {
-        props.changeStatus(props.todoList_id, itemId, event.currentTarget.checked)
+    const onChangeStatusHandler = (itemId: string, event: ChangeEvent<HTMLInputElement>) => {
+        props.changeTaskStatus(props.todoListID, itemId, event.currentTarget.checked)
     }
-//--------------------------------------------------------------------------------------------------------
+    const addTask = (title: string) => {
+        props.addTask(props.todoListID, title)
+    }
+
     return (
         <div>
             <div>
-                <div className={tl.titleTodoList}>
+                <div className={tl.titleTodoList }>
                     <h3>{props.todoListTitle}</h3>
-                    <Button name={'RemoveTL'} callback={()=>props.removeTodoList(props.todoList_id)}/>
+                    <Button name={'RemoveTL'} callback={() => props.removeTodoList(props.todoListID)}/>
                 </div>
                 <div>
-                    <Input value={title} onChangeHandler={onChangeHandler} onKeyPressHandler={onKeyPressHandler} error={error}/>
-                    <Button name={'Add item'} callback={()=>addTaskHandler()} />
-                    {error && <div className={s.emptyInputText}>Алярма!!!</div>}
+                    <AddItemForm addItem={addTask}/>
+                    {/*<Input value={title}
+                           onChangeHandler={onChangeHandler}
+                           onKeyPressHandler={onKeyPressHandler}
+                           error={error}/>
+                    <Button name={'Add task'} callback={() => addTaskHandler()}/>
+                    {error && <div className={s.emptyInputText}>Алярма!!!</div>}*/}
                 </div>
                 <ul>
                     {props.tasks.map(m => {
                             return (
                                 <li key={m.id} className={m.isDone ? s.activeTask : ''}>
-                                    <Button name={'X'} callback={()=>props.removeTaskItem(props.todoList_id, m.id)}/>
-                                    <input type="checkbox" onChange={(event)=>onChangeStatusHandler(event, m.id)} checked={m.isDone}/>
+                                    <Button name={'X'}
+                                            callback={() => props.removeTaskItem(props.todoListID, m.id)}/>
+                                    <input type="checkbox" onChange={(event) => onChangeStatusHandler(m.id, event)}
+                                           checked={m.isDone}/>
                                     <span>{m.title}</span>
                                 </li>
                             )
@@ -76,9 +83,12 @@ export const TodoList = (props: TodolistPropsType) => {
                     }
                 </ul>
                 <div>
-                    <Button color={props.filter==='All' ? s.activeFilter : ''} name={'All'} callback={()=>tsarChangeFilter('All')}/>
-                    <Button color={props.filter==='Active' ? s.activeFilter : ''} name={'Active'} callback={()=>tsarChangeFilter('Active')}/>
-                    <Button color={props.filter==='Completed' ? s.activeFilter : ''} name={'Completed'} callback={()=>tsarChangeFilter('Completed')}/>
+                    <Button color={props.filter === 'All' ? s.activeFilter : ''} name={'All'}
+                            callback={() => tsarChangeFilter('All')}/>
+                    <Button color={props.filter === 'Active' ? s.activeFilter : ''} name={'Active'}
+                            callback={() => tsarChangeFilter('Active')}/>
+                    <Button color={props.filter === 'Completed' ? s.activeFilter : ''} name={'Completed'}
+                            callback={() => tsarChangeFilter('Completed')}/>
                 </div>
             </div>
         </div>
