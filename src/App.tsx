@@ -41,15 +41,20 @@ function App() {
             ]
         }
     )
+    //tasks
     const removeTaskItem = (todoListID: string, taskID: string) => {
         setTasks({...tasks, [todoListID]: tasks[todoListID].filter(t => t.id !== taskID)})
     }
     const addTask = (todoListID: string, title: string) => {
         setTasks({...tasks, [todoListID]: [...tasks[todoListID], {id: v1(), title, isDone: false}]})
     }
+    const changeTaskTitle = (todoListID: string, taskID: string, title: string) => {
+        setTasks({...tasks, [todoListID]: tasks[todoListID].map(t => t.id === taskID ? {...t, title} : t)})
+    }
     const changeTaskStatus = (todoListID: string, taskID: string, isDone: boolean) => {
         setTasks({...tasks, [todoListID]: tasks[todoListID].map(t => t.id === taskID ? {...t, isDone} : t)})
     }
+    //todoLists
     const changeFilter = (todoListID: string, filter: FilterValuesType) => {
         setTodoLists(todoLists.map(tl => tl.id === todoListID ? {...tl, filter} : tl))
     }
@@ -61,15 +66,18 @@ function App() {
         setTodoLists([...todoLists, {id: todoListID, title, filter: 'All'}])
         setTasks({...tasks, [todoListID]: []})
     }
+    const changeTodoListTitle = (todoListID: string, title: string) => {
+        setTodoLists(todoLists.map(tl => tl.id === todoListID ? {...tl, title} : tl))
+    }
     //---------------------------------------------------------------------------------
     const todoListsComp = todoLists.map(tl => {
         let tasksForRender = tasks[tl.id]
-            if (tl.filter === 'Active') {
-                tasksForRender = tasksForRender.filter(t => !t.isDone)
-            }
-            if (tl.filter === "Completed") {
-                tasksForRender = tasksForRender.filter(t => t.isDone)
-            }
+        if (tl.filter === 'Active') {
+            tasksForRender = tasksForRender.filter(t => !t.isDone)
+        }
+        if (tl.filter === "Completed") {
+            tasksForRender = tasksForRender.filter(t => t.isDone)
+        }
         return (
             <div className="App">
                 <Todolist
@@ -83,6 +91,8 @@ function App() {
                     changeTaskStatus={changeTaskStatus}
                     filter={tl.filter}
                     removeTodoList={removeTodoList}
+                    changeTaskTitle={changeTaskTitle}
+                    changeTodoListTitle={changeTodoListTitle}
                 />
             </div>
         )
