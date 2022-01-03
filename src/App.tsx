@@ -3,7 +3,7 @@ import './App.css';
 import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {Button} from "./components/Button";
-import AddItemForm from "./components/AddItemForm";
+import {AddItemForm} from "./components/AddItemForm";
 
 export type FilterValuesType = 'All' | 'Active' | 'Completed' | 'X'
 export type TasksType = {
@@ -11,12 +11,12 @@ export type TasksType = {
     title: string,
     isDone: boolean
 }
-type TodoListsType = {
+export type TodoListsType = {
     id: string,
     title: string,
     filter: FilterValuesType
 }
-type TasksStateType = {
+export type TasksStateType = {
     [todoListID: string]: Array<TasksType>
 }
 
@@ -41,20 +41,18 @@ function App() {
             ]
         }
     )
-    //tasks
     const removeTaskItem = (todoListID: string, taskID: string) => {
         setTasks({...tasks, [todoListID]: tasks[todoListID].filter(t => t.id !== taskID)})
     }
     const addTask = (todoListID: string, title: string) => {
         setTasks({...tasks, [todoListID]: [...tasks[todoListID], {id: v1(), title, isDone: false}]})
     }
-    const changeTaskTitle = (todoListID: string, taskID: string, title: string) => {
-        setTasks({...tasks, [todoListID]: tasks[todoListID].map(t => t.id === taskID ? {...t, title} : t)})
-    }
     const changeTaskStatus = (todoListID: string, taskID: string, isDone: boolean) => {
         setTasks({...tasks, [todoListID]: tasks[todoListID].map(t => t.id === taskID ? {...t, isDone} : t)})
     }
-    //todoLists
+    const changeTaskTitle = (todoListID: string, taskID: string, title: string) => {
+        setTasks({...tasks, [todoListID]: tasks[todoListID].map(t=> t.id === taskID ? {...t, title} : t)})
+    }
     const changeFilter = (todoListID: string, filter: FilterValuesType) => {
         setTodoLists(todoLists.map(tl => tl.id === todoListID ? {...tl, filter} : tl))
     }
@@ -83,7 +81,7 @@ function App() {
                 <Todolist
                     key={tl.id}
                     todoListID={tl.id}
-                    todoListTitle={tl.title}
+                    title={tl.title}
                     tasks={tasksForRender}
                     removeTaskItem={removeTaskItem}
                     changeFilter={changeFilter}
@@ -91,8 +89,8 @@ function App() {
                     changeTaskStatus={changeTaskStatus}
                     filter={tl.filter}
                     removeTodoList={removeTodoList}
-                    changeTaskTitle={changeTaskTitle}
                     changeTodoListTitle={changeTodoListTitle}
+                    changeTaskTitle={changeTaskTitle}
                 />
             </div>
         )
@@ -101,7 +99,9 @@ function App() {
     return (
         <div className={'todoList'}>
             {todoListsComp}
-            <AddItemForm addItem={addTodoList}/>
+            <div className={'add-tl'}>
+                <AddItemForm name={'AddTL'} addItem={addTodoList}/>
+            </div>
         </div>
     )
 }
