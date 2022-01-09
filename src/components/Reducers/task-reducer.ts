@@ -1,29 +1,36 @@
 import {TasksStateType} from "../../App";
 import {v1} from "uuid";
+import {AddTodoListActionType, RemoveTodoListActionType} from "./todoList-reducer";
 
 type RemoveTaskItemActionType = {
     type: 'REMOVE-TASK-ITEM'
     todoListID: string
     taskID: string
 }
-type AddTaskItem = {
+type AddTaskItemActionType = {
     type: 'ADD-TASK-ITEM'
     todoListID: string
     newTitle: string
 }
-type ChangeTaskTitle = {
+type ChangeTaskTitleActionType = {
     type: 'CHANGE-TASK-TITLE'
     todoListID: string
     taskID: string
     newTitle: string
 }
-type ChangeTaskStatus = {
+type ChangeTaskStatusActionType = {
     type: 'CHANGE-TASK-STATUS'
     todoListID: string
     taskID: string
     newIsDone: boolean
 }
-type ActionType = RemoveTaskItemActionType | AddTaskItem | ChangeTaskTitle | ChangeTaskStatus
+type ActionType =
+    RemoveTaskItemActionType
+    | AddTaskItemActionType
+    | ChangeTaskTitleActionType
+    | ChangeTaskStatusActionType
+    | RemoveTodoListActionType
+    | AddTodoListActionType
 
 export const removeTaskItemAC = (todoListID: string, taskID: string)=> {
     return {type: "REMOVE-TASK-ITEM" as const, todoListID: todoListID, taskID: taskID}
@@ -53,7 +60,13 @@ export const tasksReducer = (tasks: TasksStateType, action: ActionType) => {
             return {...tasks, [action.todoListID]: tasks[action.todoListID].map(t => t.id === action.taskID ? {...t, title: action.newTitle} : t)}
         case 'CHANGE-TASK-STATUS':
             return {...tasks, [action.todoListID]: tasks[action.todoListID].map(t => t.id === action.taskID ? {...t, isDone: action.newIsDone} : t)}
+        case 'REMOVE-TODOLIST':
+            const copyTasks = {...tasks}
+            delete copyTasks[action.id]
+            return copyTasks
+        case 'ADD-TODOLIST':
+            return {...tasks, [action.id]: []}
         default:
-            throw new Error('Incorrect type!')
+            return tasks
     }
 }

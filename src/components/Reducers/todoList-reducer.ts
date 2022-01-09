@@ -1,13 +1,14 @@
 import {TodoListsType, FilterValuesType} from '../../App';
 import {v1} from 'uuid';
 
-type RemoveTodoListActionType = {
+export type RemoveTodoListActionType = {
     type: 'REMOVE-TODOLIST'
     id: string
 }
-type AddTodoListActionType = {
+export type AddTodoListActionType = {
     type: 'ADD-TODOLIST'
     title: string
+    id: string
 }
 type ChangeTodoListTitleActionType = {
     type: 'CHANGE-TODOLIST-TITLE'
@@ -30,12 +31,12 @@ export const RemoveTodoListAC = (todoListID: string) => {
     return {type: 'REMOVE-TODOLIST' as const, id: todoListID}
 }
 export const AddTodoListAC = (newTitle: string) => {
-    return {type: 'ADD-TODOLIST' as const, title: newTitle}
+    return {type: 'ADD-TODOLIST' as const, title: newTitle, id: v1()}
 }
 export const ChangeTodoListTitleAC = (newTitle: string, todoListID: string) => {
     return {type: 'CHANGE-TODOLIST-TITLE' as const, title: newTitle, id: todoListID}
 }
-export const ChangeTodoListFilterAC = (newFilter: string, todoListID: string) => {
+export const ChangeTodoListFilterAC = (newFilter: FilterValuesType, todoListID: string) => {
     return {type: 'CHANGE-TODOLIST-FILTER' as const, filter: newFilter, id: todoListID}
 }
 
@@ -44,17 +45,12 @@ export const todoListReducer = (todoLists: Array<TodoListsType>, action: ActionT
         case 'REMOVE-TODOLIST':
             return todoLists.filter(tl => tl.id !== action.id)
         case 'ADD-TODOLIST':
-            const newTodoList: TodoListsType = {
-                id: v1(),
-                title: action.title,
-                filter: 'All'
-            }
-            return [...todoLists, newTodoList]
+            return [...todoLists, {id: action.id, title: action.title, filter: 'All'}]
         case 'CHANGE-TODOLIST-TITLE':
             return todoLists.map(tl => tl.id === action.id ? {...tl, title: action.title} : tl)
         case 'CHANGE-TODOLIST-FILTER':
             return todoLists.map(tl => tl.id === action.id ? {...tl, filter: action.filter} : tl)
         default:
-            throw new Error('Incorrect type!')
+            return todoLists
     }
 }
