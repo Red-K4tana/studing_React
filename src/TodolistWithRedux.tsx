@@ -11,6 +11,7 @@ import {ChangeTodolistFilterAC, ChangeTodolistTitleAC, RemoveTodolistAC} from ".
 import {addTaskItemAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskItemAC} from "./Redux/tasks-reducer";
 import {AppRootStateType} from "./Redux/store";
 import {TodolistsType} from "./AppWithRedux";
+import {Task} from "./components/task";
 
 type TodolistPropsType = {
     todolistID: string
@@ -31,12 +32,6 @@ export const TodolistWithRedux = (props: TodolistPropsType) => {
     const removeTodolist = (todolistID: string) => {
         dispatch(RemoveTodolistAC(todolistID))
     }
-    const onChangeStatusHandler = (taskId: string, event: ChangeEvent<HTMLInputElement>) => {
-        dispatch(changeTaskStatusAC(todolist.id, taskId, event.currentTarget.checked))
-    }
-    const removeTaskItem = (todolistID: string, taskID: string) => {
-        dispatch(removeTaskItemAC(todolistID, taskID))
-    }
     const addTask = (newTitle: string) => {
         dispatch(addTaskItemAC(todolist.id, newTitle))
     }
@@ -50,17 +45,8 @@ export const TodolistWithRedux = (props: TodolistPropsType) => {
     }
     //-------------------------------------------------------------------------------------------
     const tasksJSX = tasksAfterFilter.map(task => {
-            const changeTaskTitle = (newTitle: string) => {
-                dispatch(changeTaskTitleAC(todolist.id, task.id, newTitle))
-            }
             return (
-                <li key={task.id} className={task.isDone ? s.activeTask : ''}>
-                    <Button name={'X'}
-                            callback={() => removeTaskItem(todolist.id, task.id)}/>
-                    <input type="checkbox" onChange={(event) => onChangeStatusHandler(task.id, event)}
-                           checked={task.isDone}/>
-                    <EditableSpan title={task.title} changeTitle={changeTaskTitle}/>
-                </li>
+                <Task key={task.id} todolistID={todolist.id} taskID={task.id}/>
             )
         }
     )
